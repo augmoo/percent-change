@@ -22,16 +22,19 @@ function onInstall(e) {
  */
 function onOpen(e) {
   SpreadsheetApp.getUi().createAddonMenu()
-      .addItem('Start', 'showSidebar')
-      .addToUi();
+    .addItem('Use in this spreadsheet', 'use')
+    .addToUi();
 }
 
 /**
- * Opens a sidebar in the document containing the add-on's user interface.
- * This method is only used by the regular add-on, and is never called by
- * the mobile add-on version.
+ * Enables the add-on on for the current spreadsheet (simply by running) and
+ * shows a popup informing the user of the new functions that are available.
  */
-function showSidebar() {
-  const ui = HtmlService.createHtmlOutputFromFile('sidebar').setTitle('Percent Change');
-  SpreadsheetApp.getUi().showSidebar(ui);
+function use() {
+  var title = 'Percent Change custom functions';
+  var message = 'The functions PCNEW(), PCORIGINAL() and PC() are now available in ' +
+      'this spreadsheet. More information is available in the function help ' +
+      'box that appears when you start using them in a formula.';
+  var ui = SpreadsheetApp.getUi();
+  ui.alert(title, message, ui.ButtonSet.OK);
 }
