@@ -1,10 +1,28 @@
 {
   "timeZone": "Europe/Berlin",
-  "dependencies": {
-  },
+  "dependencies": {},
   "exceptionLogging": "STACKDRIVER",
   "runtimeVersion": "V8",
   "oauthScopes": [
+    "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/spreadsheets.currentonly"
-  ]
+  ],
+  "addOns": {
+    "common": {
+      "name": "Percent Change",
+      "logoUrl": "https://www.augmoo.xyz/percentchangelogo96.png",
+      "layoutProperties": {
+        "primaryColor": "#2772ed",
+        "secondaryColor": "#0f4fb8"
+      },
+      "openLinkUrlPrefixes": [
+        "https://www.augmoo.xyz/percent-change"
+      ]
+    },
+    "sheets": {
+      "homepageTrigger": {
+        "runFunction": "onHomepage"
+      }
+    }
+  }
 }
