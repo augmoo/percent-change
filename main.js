@@ -14,36 +14,51 @@ function createCard(method, coo1, coo2) {
       title = "Apply a percent change";
       label1 = "Original value";
       label2 = "Percent change";
+      coordinate1 = "originalValue";
+      coordinate2 = "percentChange";
       break;
     case "2":
       title = "Get original value";
       label1 = "New value";
       label2 = "Percent change";
+      coordinate1 = "newValue";
+      coordinate2 = "percentChange";  
       break;
     case "3":
       title = "Get percent change";
       label1 = "Original value";
       label2 = "New value";
+      coordinate1 = "originalValue";
+      coordinate2 = "newValue";
       break;
     default:
       title = "Welcome";
       label1 = "";
       label2 = "";
+      coordinate1 = "";
+      coordinate2 = "";
       break;
   }
 
   if (coo1 != null) {
     coordinate1 = coo1;
   }
+  else {
+    coo1 = "";
+  }
 
   if (coo2 != null) {
     coordinate2 = coo2;
+  }
+  else {
+    coo2 = "";
   }
 
   var cardHeader = CardService.newCardHeader()
     .setTitle(title);
 
-  var section = CardService.newCardSection();
+  var dropSection = CardService.newCardSection();
+  var methodSection = CardService.newCardSection();
 
   var dropdown = CardService.newSelectionInput()
     .setType(CardService.SelectionInputType.DROPDOWN)
@@ -53,7 +68,7 @@ function createCard(method, coo1, coo2) {
     .addItem("Get original value", "2", method == "2")
     .addItem("Get percent change", "3", method == "3")
     .setOnChangeAction(CardService.newAction().setFunctionName('onDropdownChange'));
-  section.addWidget(dropdown);
+  dropSection.addWidget(dropdown);
 
   var helpButton = CardService.newTextButton()
       .setText("Help")
@@ -63,55 +78,59 @@ function createCard(method, coo1, coo2) {
         .setOnClose(CardService.OnClose.NOTHING));
 
   if (method == null) {
-    section.addWidget(helpButton);
+    methodSection.addWidget(helpButton);
   }
   else {
-    var dividerMethod = CardService.newDivider();
-    section.addWidget(dividerMethod);
-
     var textButton1 = CardService.newTextButton()
       .setText("Get selection")
       .setOnClickAction(CardService.newAction()
         .setFunctionName("getSelectionOne"));
 
     var decoratedText1 = CardService.newDecoratedText()
-      .setText(coordinate1)
+      .setText(coo1)
       .setTopLabel(label1)
       .setButton(textButton1);
-    section.addWidget(decoratedText1);
+    methodSection.addWidget(decoratedText1);
 
     var textButton2 = CardService.newTextButton()
       .setText("Get selection")
       .setOnClickAction(CardService.newAction()
           .setFunctionName("getSelectionTwo")
-          .setParameters({ coordinate1: coordinate1 }));
+          .setParameters({ coordinate1: coo1 }));
 
     var decoratedText2 = CardService.newDecoratedText()
-      .setText(coordinate2)
+      .setText(coo2)
       .setTopLabel(label2)
       .setButton(textButton2);
-    section.addWidget(decoratedText2);
+    methodSection.addWidget(decoratedText2);
 
     var dividerResult = CardService.newDivider();
-    section.addWidget(dividerResult);
+    methodSection.addWidget(dividerResult);
+
+    var formulaDecoratedText = CardService.newDecoratedText()
+      .setText(getFormula(method, coordinate1, coordinate2))
+      .setTopLabel("Formula")
+      .setWrapText(true);
+    methodSection.addWidget(formulaDecoratedText);
 
     var formulaButton = CardService.newTextButton()
       .setText("Insert formula")
       .setTextButtonStyle(CardService.TextButtonStyle.FILLED)
       .setOnClickAction(CardService.newAction()
         .setFunctionName("handleFormula")
-        .setParameters({ method: method, coordinate1: coordinate1, coordinate2: coordinate2 }));
+        .setParameters({ method: method, coordinate1: coo1, coordinate2: coo2 }));
 
     var buttonSet = CardService.newButtonSet();
     buttonSet
       .addButton(formulaButton)
       .addButton(helpButton);
-    section.addWidget(buttonSet);
+    methodSection.addWidget(buttonSet);
   }
 
   var card = CardService.newCardBuilder()
     .setHeader(cardHeader)
-    .addSection(section)
+    .addSection(dropSection)
+    .addSection(methodSection)
     .build();
   return card;
 }
